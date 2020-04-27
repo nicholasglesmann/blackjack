@@ -1,0 +1,127 @@
+body {
+    background-color: aliceblue;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 3rem;
+    margin-top: 1rem;
+    letter-spacing: .3rem;
+}
+
+h6 {
+    margin-bottom: 2rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.gameOver {
+    background-color: black;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.hidden {
+    display: none;
+}
+
+.firstCard {
+    width: 8rem;
+    margin-bottom: 0;
+    border: none;
+    display: inline-block;
+}
+
+.card {
+    width: 8rem;
+    margin-left: -4rem;
+    margin-bottom: 0;
+    border: none;
+    display: inline-block;
+}
+
+.playerInfo {
+    display: inline-block;
+}
+
+.arrows {
+    width: 2rem;
+    display: inline-block;
+}
+
+.playerBetArea {
+    margin: auto;
+    margin-top: -2rem;
+    text-align: center;
+}
+
+.circle {
+    position: relative;
+    display: inline-block;
+    width: 10%;
+    padding: 0;
+    border-radius: 50%;
+
+    background: black;
+    color: white;
+    font-family: Helvetica, Arial Black, sans;
+    font-size: 48px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.info-area {
+    margin-top: 1.5rem;
+    display: inline-block;
+}
+
+
+#playerBetSelection {
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+#bet {
+    display: block;
+    margin: auto;
+    margin-top: 10px;
+    text-align: center;
+}
+
+#heading {
+    text-align: center;
+}
+
+#deck {
+    width: 8rem;
+    margin-bottom: 2rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#action-area {
+    text-align: center;
+}
+
+
+#hit {
+    margin: auto;
+    margin-bottom: .1rem;
+}
+
+#stand {
+    margin: auto;
+    margin-bottom: .1rem;
+}
+
+#surrender {
+    margin: auto;
+    margin-bottom: .1rem;
+}

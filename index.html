@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="src/styles.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <title>Blackjack</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div id="heading">
+                    <h1>BLACKJACK</h1>
+                    <h6>Place a bet to begin.</h6>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+            <img id="deck" src="./images/cards/blue_back.png"></img>
+        </div>
+        <div id="dealer-area" class="col-md-6">
+            <img id="dealer0" class="firstCard" src=""></img>
+            <img id="dealer1" class="card" src=""></img>
+            <img id="dealer2" class="card" src=""></img>
+            <img id="dealer3" class="card" src=""></img>
+            <img id="dealer4" class="card" src=""></img>
+            <img id="dealer5" class="card" src=""></img>
+            <div id="dealerScore" class="circle">
+                0
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div id="action-area" class="col-md-2">
+            <div class="btn-group-lg btn-group-vertical">
+                <button id="hit" class="btn btn-success">Hit</button>
+                <button id="stand" class="btn btn-success">Stand</button>
+                <button id="surrender" class="btn btn-success">Surrender</button>
+            </div>
+        </div>
+        <div id="player-area" class="col-md-6">
+            <img id="player0" class="firstCard" src=""></img>
+            <img id="player1" class="card" src=""></img>
+            <img id="player2" class="card" src=""></img>
+            <img id="player3" class="card" src=""></img>
+            <img id="player4" class="card" src=""></img>
+            <img id="player5" class="card" src=""></img>
+            <div id="playerScore" class="circle">
+                0            
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+            <div class="playerBetArea">
+                <img id="downArrow" class="arrows" src="./images/sort-down.png" alt="">
+                <h4 id="playerBetSelection">$0</h4>
+                <img id="upArrow" class="arrows" src="./images/sort-up.png" alt="">
+            </div>
+            <button id="bet" class="btn btn-lg btn-success">Place Bet</button>
+        </div>
+        <div class="col-md-2">
+            <h4 id="playerBet" class="playerInfo info-area">Current Bet: $0</h4>
+        </div>
+        <div class="col-md-2">
+            <h4 id="playerCash" class="playerInfo info-area">Total Cash: $0</h4>
+        </div>
+        <div class="col-md-4"></div>
+    </div>    
+
+
+    <script src="src/index.js"></script>
+</body>
+</html>
