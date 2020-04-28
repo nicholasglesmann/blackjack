@@ -1,43 +1,41 @@
+import Deck from './Deck.js';
+import Hand from './Hand.js';
+import UI from './UI.js';
+
 class Game {
     constructor() {
 
         ////////// Class Variables \\\\\\\\\\
         this.gameDeck = {};
-        
-        this.dealerCards = [];
-        this.playerCards = [];
 
-        this.dealerScore = 0;
-        this.playerScore = 0;
+        this.dealerHand = {};
+        this.playerHand = {};
 
         this.playerCash = 1000;
         this.playerCurrentBet = 0;
         this.playerBetValue = 50;
 
-        this.printDealerScores = [];
+        this.dealerScorePrintQueue = [];
 
-        this.actionButtons = ["hit", "stand", "surrender"];
+        this.Actions = ["hit", "stand", "surrender"];
 
         ////////// Method Bindings \\\\\\\\\\
         this.mainGameLoop = this.mainGameLoop.bind(this);
         this.newHand = this.newHand.bind(this);
-        this.playerBet = this.playerBet.bind(this);
+        this.dealInitialCards = this.dealInitialCards.bind(this);
         this.hitClick = this.hitClick.bind(this);
         this.standClick = this.standClick.bind(this);
         this.surrenderClick = this.surrenderClick.bind(this);
         this.betClick = this.betClick.bind(this);
         this.increaseBet = this.increaseBet.bind(this);
         this.decreaseBet = this.decreaseBet.bind(this);
-        this.disableButton = this.disableButton.bind(this);
-        this.disableActionButtons = this.disableActionButtons.bind(this);
-        this.enableButton = this.enableButton.bind(this);
-        this.enableActionButtons = this.enableActionButtons.bind(this);
         this.dealerPlay = this.dealerPlay.bind(this);
-        this.sumDealerScore = this.sumDealerScore.bind(this);
         this.updateMoney = this.updateMoney.bind(this);
         this.checkGameOver = this.checkGameOver.bind(this);
 
         ////////// Initial Methods \\\\\\\\\\
+        UI.setOnDeckStyle();
+        UI.setUpCardLocations();
         this.addEventListeners();
         this.mainGameLoop();
     }
@@ -48,66 +46,56 @@ class Game {
         document.getElementById("stand").addEventListener("click", () => { this.standClick(); });
         document.getElementById("surrender").addEventListener("click", () => { this.surrenderClick(); });
         document.getElementById("bet").addEventListener("click", () => { this.betClick(); });
+        document.getElementById("downArrow").addEventListener("click", () => { this.decreaseBet(); });
+        document.getElementById("upArrow").addEventListener("click", () => { this.increaseBet(); });
     }
-
 
     ////////// New Hand Methods \\\\\\\\\\
     newHand() {
-        //create new deck and shuffle it
         this.gameDeck = new Deck(52);
         this.gameDeck.shuffleDeck();
 
-        //get initial card positions
-        let newPlayerCardPosition = document.getElementById("player0");
-        let newDealerCardPosition = document.getElementById("dealer0");
+        this.playerHand = new Hand();
+        this.dealerHand = new Hand();
 
-        //deal initial cards
-        let newPlayerCard = this.gameDeck.dealCard();
-        let newDealerCard = this.gameDeck.dealCard();
+        this.dealInitialCards();
+    }
 
-        //add initial cards to correct arrays
-        this.playerCards.push(newPlayerCard);
-        this.dealerCards.push(newDealerCard);
+    dealInitialCards() {
+        for (let i = 0; i < 2; i++) {
+            let playerCardLocation = UI.getPlayerFrontCardLocation(i);
+            let dealerCardLocation = UI.getDealerFrontCardLocation(i);
 
-        //print the images to the screen
-        let newPlayerCardName = newPlayerCard.getCardFilename();
-        let newDealerCardName = newDealerCard.getCardFilename();
-        newPlayerCard.setCardImage(newPlayerCardPosition, newPlayerCardName);
-        newDealerCard.setCardImage(newDealerCardPosition, newDealerCardName);
+            let playerCard = this.gameDeck.dealCard();
+            let dealerCard = this.gameDeck.dealCard();
 
-        //update scores
-        this.sumPlayerScore(this.playerCards);
-        document.getElementById("playerScore").innerText = this.playerScore;
+            this.playerHand.addCard(playerCard);
+            this.dealerHand.addCard(dealerCard);
 
-        this.sumDealerScore(this.dealerCards);
-        document.getElementById("dealerScore").innerText = this.dealerScore;
+            UI.printCard(playerCardLocation, playerCard.getFileName());
+            UI.printCard(dealerCardLocation, dealerCard.getFileName());
+        }
     }
 
     mainGameLoop() {
-        document.getElementById("playerScore").innerText = 0;
-        document.getElementById("dealerScore").innerText = 0;
-        document.getElementById("playerCash").innerHTML = "Total Cash: $" + this.playerCash;
-        document.getElementById("dealer0").setAttribute("src", "./images/cards/blue_back.png");
-        document.getElementById("player0").setAttribute("src", "./images/cards/blue_back.png");
-        document.getElementById("playerBetSelection").innerHTML = "$" + this.playerBetValue;
-        this.disableActionButtons();
+        UI.setUpHand(this.playerCash, this.playerBetValue);
+        this.newHand();
+        UI.disableActions();
         this.checkGameOver();
-        this.playerBet()
-    }
-
-    playerBet() {
-        document.getElementById("downArrow").addEventListener("click", this.decreaseBet);
-        document.getElementById("upArrow").addEventListener("click", this.increaseBet);
-        document.getElementById("bet").removeAttribute("disabled");
+        UI.enableBetting();
     }
 
     increaseBet() {
+        if (UI.isBettingDisabled) {
+            return;
+        }
+
         //get current bet ammount        
         let betSelection = document.getElementById("playerBetSelection");
         let betAmount = Number(betSelection.innerHTML.substring(1));
-        
+
         //check that player has enough to bet
-        if(betAmount + 50 <= this.playerCash) {
+        if (betAmount + 50 <= this.playerCash) {
             betAmount += 50;
         } else {
             betAmount = this.playerCash;
@@ -118,12 +106,16 @@ class Game {
     }
 
     decreaseBet() {
+        if (UI.isBettingDisabled) {
+            return;
+        }
+
         //get current bet ammount
         let betSelection = document.getElementById("playerBetSelection");
         let betAmount = Number(betSelection.innerHTML.substring(1));
-        
+
         //check that bet ammount is not less than 50
-        if(betAmount - 50 >= 50) {
+        if (betAmount - 50 >= 50) {
             betAmount -= 50;
         } else {
             betAmount = Number(50);
@@ -135,31 +127,29 @@ class Game {
 
     ////////// Click Methods \\\\\\\\\\
     hitClick() {
-        //get the new card position
-        let newCardPosition = document.getElementById("player" + this.playerCards.length);
+        let cardIndex = this.playerHand.getCardCount();
+        let cardFrontLocation = UI.getPlayerFrontCardLocation(cardIndex);
+        let cardBackLocation = UI.getPlayerBackCardLocation(cardIndex);
 
-        //deal a card
-        let newCard = this.gameDeck.dealCard();
+        let card = this.gameDeck.dealCard();
 
-        //add card to playerCards array
-        this.playerCards.push(newCard);
+        this.playerHand.addCard(card);
 
-        //print card image to the screen
-        let newCardName = newCard.getCardFilename();
-        newCard.setCardImage(newCardPosition, newCardName);
+        let score = this.playerHand.getScore();
 
-        //print player score to the screen
-        this.sumPlayerScore(this.playerCards);
-        document.getElementById("playerScore").innerText = this.playerScore;
+        UI.placeCard(cardBackLocation);
+        UI.printCard(cardFrontLocation, card.getFileName());
+        UI.flipCard(cardFrontLocation);
+        UI.printPlayerScore(score);
 
         //if score over 21, hand over
-        if(this.playerScore > 21) {
+        if (score > 21) {
             this.playerBust();
         }
     }
 
     standClick() {
-        this.disableActionButtons();
+        UI.disableActions();
         this.dealerPlay();
     }
 
@@ -168,47 +158,31 @@ class Game {
     }
 
     betClick() {
-        //disable bet buttons
-        document.getElementById("downArrow").removeEventListener("click", this.decreaseBet);
-        document.getElementById("upArrow").removeEventListener("click", this.increaseBet);
-        document.getElementById("bet").setAttribute("disabled", "true");
+        UI.disableBetting();
+        UI.enableActions();
+        UI.flipInitialCards();
 
-        //enable action buttons
-        this.enableActionButtons();
+        UI.printPlayerScore(this.playerHand.getScore());
+        UI.printDealerScore(this.dealerHand.getPartialDealerScore());
 
         //get the players bet and subtract it from the players cash
         this.playerCurrentBet = document.getElementById("playerBetSelection").innerHTML.substring(1);
         this.playerCash -= Number(this.playerCurrentBet);
         this.updateMoney();
-
-        this.newHand();
     }
 
     ////////// Score Methods \\\\\\\\\\
-    sumPlayerScore(cards) {
-        let sum = 0;
-        for (let i = 0; i < cards.length; i++) {
-            sum += cards[i].getValue(this.playerScore);
-        }
-        this.playerScore = sum;
-    }
-
-    sumDealerScore(cards) {
-        let sum = 0;
-        for (let i = 0; i < cards.length; i++) {
-            sum += cards[i].getValue(this.dealerScore);
-        }
-        this.dealerScore = sum;
-    }
-
     compareScores() {
-        if(this.dealerScore > 21) {
+        let playerScore = this.playerHand.getScore();
+        let dealerScore = this.dealerHand.getScore();
+
+        if (dealerScore > 21) {
             this.dealerBust();
-        } else if (this.dealerScore > this.playerScore) {
+        } else if (dealerScore > playerScore) {
             this.dealerWin();
-        } else if (this.dealerScore < this.playerScore) {
+        } else if (dealerScore < playerScore) {
             this.playerWin();
-        } else if (this.dealerScore === this.playerScore) {
+        } else if (dealerScore === playerScore) {
             this.playerPush();
         }
     }
@@ -216,13 +190,11 @@ class Game {
     ////////// Finish Round Methods \\\\\\\\\\
     playerBust() {
         console.log("player bust");
-        this.disableActionButtons();
         this.dealerWin();
     }
 
     dealerBust() {
         console.log("dealer bust");
-        this.disableActionButtons();
         this.playerWin();
     }
 
@@ -240,53 +212,31 @@ class Game {
     }
 
     endHand() {
+        UI.disableActions();
+
         //clear variables
         this.gameDeck = {};
 
-        this.dealerCards = [];
-        this.playerCards = [];
-
-        this.dealerScore = 0;
-        this.playerScore = 0;
+        this.dealerHand = new Hand();
+        this.playerHand = new Hand();
 
         this.playerCurrentBet = 0;
-        this.printDealerScores = [];
+        this.dealerScorePrintQueue = [];
         this.updateMoney();
-        this.removeAllCards();
+        UI.removeAllCards();
         this.mainGameLoop();
     }
 
     checkGameOver() {
-        if(this.playerCash <= 0) {
+        if (this.playerCash <= 0) {
             let bodySelector = document.getElementsByTagName("body");
             let body = bodySelector[0];
             let allElements = document.getElementsByTagName("*");
-            for (let i=0; i < allElements.length; i++) {
+            for (let i = 0; i < allElements.length; i++) {
                 allElements[i].classList.add("hidden");
             }
             body.classList.remove("hidden");
             body.classList.add("gameOver");
-        }
-    }
-
-    ////////// Button Enable/Disable Methods \\\\\\\\\\
-    disableButton(buttonName) {
-        document.getElementById(buttonName).setAttribute("disabled", "true");
-    }
-
-    disableActionButtons() {
-        for(let i = 0; i < this.actionButtons.length; i++) {
-            this.disableButton(this.actionButtons[i]);
-        }
-    }
-
-    enableButton(buttonName) {
-        document.getElementById(buttonName).removeAttribute("disabled");
-    }
-
-    enableActionButtons() {
-        for(let i = 0; i < this.actionButtons.length; i++) {
-            this.enableButton(this.actionButtons[i]);
         }
     }
 
@@ -296,147 +246,49 @@ class Game {
         document.getElementById("playerCash").innerHTML = "Total Cash: $" + this.playerCash;
     }
 
-    removeAllCards() {
-        for(let i = 1; i <= 5; i++) {
-            let playerCard = "player" + i;
-            let dealerCard = "dealer" + i;
-            document.getElementById(playerCard).removeAttribute("src");
-            document.getElementById(dealerCard).removeAttribute("src");
-        }
-    }
-
     ////////// Dealer Methods \\\\\\\\\\
     dealerPlay() {
-        let printDelay = 500;
+        let printDelay = 1500;
         let printPosition = 0;
 
-        while(this.dealerScore <= 17) {
+        // reveal the initial card
+        let startingCardLocation = UI.getDealerFrontCardLocation(0);
+        let startingCard = this.dealerHand.getCard(0);
+        UI.printCard(startingCardLocation, startingCard.getFileName());
+        UI.printDealerScore(this.dealerHand.getScore());
+        UI.flipCard(startingCardLocation);
+
+        while (this.dealerHand.getScore() <= 17) {
             //get the new card position
-            let newCardPosition = document.getElementById("dealer" + this.dealerCards.length);
+            let cardLocation = UI.getDealerFrontCardLocation(this.dealerHand.getCardCount());
 
             //deal a card
-            let newCard = this.gameDeck.dealCard();
+            let card = this.gameDeck.dealCard();
 
-            //add card to dealerCards array
-            this.dealerCards.push(newCard);
+            this.dealerHand.addCard(card);
 
             //delay printing image/score to the screen
             setTimeout(() => {
+                UI.printCard(cardLocation, card.getFileName());
 
-            //print card image to the screen
-            let newCardName = newCard.getCardFilename();
-            newCard.setCardImage(newCardPosition, newCardName);
-
-            //print dealer score to the screen
-            document.getElementById("dealerScore").innerText = this.printDealerScores[printPosition];
-            printPosition++;
+                //print dealer score to the screen
+                document.getElementById("dealerScore").innerText = this.dealerScorePrintQueue[printPosition];
+                printPosition++;
 
             }, printDelay, printPosition);
 
-            //update printdealerscores array
-            this.sumDealerScore(this.dealerCards)
-            this.printDealerScores.push(this.dealerScore);
+            //update dealerScorePrintQueue array for delayed score printing
+            this.dealerScorePrintQueue.push(this.dealerHand.getScore());
 
             //add 1000 ms between each image/score print
             printDelay += 1000;
         }
-        
+
         printDelay += 1000;
         setTimeout(() => { this.compareScores(); }, printDelay);
     }
 }
 
-class Card {
-    constructor(suit, value) {
-
-        ////////// Class Variables \\\\\\\\\\
-        this.suits = ["Hearts", "Clubs", "Spades", "Diamonds"];
-        this.values = ["?", "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"];
-
-        this.suit = this.suits[suit];
-        this.nameValue = this.values[value];
-        this.numberValue = value;
-
-        ////////// Method Bindings \\\\\\\\\\
-        this.getValue = this.getValue.bind(this);
-        this.getCardFilename = this.getCardFilename.bind(this);
-        this.hasMatchingValue = this.hasMatchingValue.bind(this);
-    }
-
-    getValue(currentTotal) {
-        if(this.numberValue > 1 && this.numberValue < 10) {
-            return this.numberValue;
-        } else if(this.numberValue >= 10) {
-            return 10;
-        } else if(this.numberValue === 1 && currentTotal + 11 > 21) {
-            return 1;
-        } else if (this.numberValue === 1 && currentTotal + 11 <= 21) {
-            return 11;
-        }
-    }
-
-    getCardFilename() {
-        let suitLetter = this.suit.charAt(0);
-        return this.nameValue + suitLetter;
-    }
-
-    setCardImage(cardLocation, cardName) {
-        //set the src attribute of the image element "cardLocation" to "cardName.png"
-        cardLocation.setAttribute("src", "./images/cards/" + cardName + ".png");
-    }
-
-    hasMatchingValue(cardValue) {
-        if (this.nameValue === cardValue)
-            return true;
-        return false;
-    }
-}
-
-class Deck {
-    constructor(numOfCards) {
-
-        ////////// Class Variables \\\\\\\\\\
-        this.deck = this.createDeck(numOfCards);
-
-        ////////// Method Bindings \\\\\\\\\\
-        this.createDeck = this.createDeck.bind(this);
-        this.shuffleDeck = this.shuffleDeck.bind(this);
-        this.dealCard = this.dealCard.bind(this);
-    }
-
-    createDeck(numOfCards) {
-        let newDeck = [];
-        for (let suit = 0; suit <= 3; suit++)
-        {
-            for (let value = 1; value <= 13; value++)
-            {
-                let c = new Card(suit, value);
-                newDeck.push(c);
-            }
-        }
-        return newDeck;
-    }
-
-    shuffleDeck() {
-        for (let j = 0; j < this.deck.length - 1; j++)
-        {
-            for (let i = 0; i < this.deck.length - 1; i++)
-            {
-                let randomIndex = Math.floor(Math.random() * 52);
-                let tempCard = this.deck[randomIndex];
-                this.deck[randomIndex] = this.deck[i];
-                this.deck[i] = tempCard;
-            }
-        }
-    }
-
-    dealCard() {
-        if(this.deck.length > 0)
-            return this.deck.pop();
-        else
-            console.log("Deal Card Error.");
-    }
-}
 
 let game;
 window.addEventListener('load', () => game = new Game());
