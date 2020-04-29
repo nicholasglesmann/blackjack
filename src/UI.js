@@ -6,8 +6,8 @@ export default class UI {
 
     static isBettingDisabled = false;
 
-    static setUpCardLocations() {
-        // Calculate initial DOM locations of each card
+    static setUpCardContainers() {
+        // Calculate initial DOM Containers of each card
         for (let i = 5; i >= 0; i--) {
             let dealerCardElement = document.getElementById("dealer" + i);
             let playerCardElement = document.getElementById("player" + i);
@@ -21,7 +21,7 @@ export default class UI {
             playerCardElement.style.left = playerPosition.left + "px";
         }
 
-        // Each card must be set as fixed and marginLeft 0 AFTER the initial locations are calculated
+        // Each card must be set as fixed and marginLeft 0 AFTER the initial Containers are calculated
         for (let i = 5; i > -1; i--) {
             let dealerCardElement = document.getElementById("dealer" + i);
             let playerCardElement = document.getElementById("player" + i);
@@ -36,9 +36,7 @@ export default class UI {
         }
     }
 
-
-
-    static setUpHand(playerCash, playerBet) {
+    static resetForNewHand(playerCash, playerBet) {
         document.getElementById("playerScore").innerText = 0;
         document.getElementById("dealerScore").innerText = 0;
         document.getElementById("playerCash").innerHTML = "Total Cash: $" + playerCash;
@@ -67,8 +65,8 @@ export default class UI {
         let animationDelay = 0;
 
         for (let i = 1; i >= 0; i--) {
-            let dealerCardElement = UI.getDealerFrontCardLocation(i);
-            let playerCardElement = UI.getPlayerFrontCardLocation(i);
+            let dealerCardElement = UI.getDealerFrontCardContainer(i);
+            let playerCardElement = UI.getPlayerFrontCardContainer(i);
             window.setTimeout(() => {
                 UI.flipCard(playerCardElement);
             }, animationDelay);
@@ -96,83 +94,93 @@ export default class UI {
         return document.getElementById("dealer" + index);
     }
 
-    static getPlayerBackCardLocation(index) {
-        return document.getElementById("player" + index + "-back");
+    static getPlayerBackCardContainer(index) {
+        return UI.getBackCardContainer(index, "player");
     }
 
-    static getDealerBackCardLocation(index) {
-        return document.getElementById("dealer" + index + "-back");
+    static getDealerBackCardContainer(index) {
+        return UI.getBackCardContainer(index, "dealer");
     }
 
-    static getPlayerFrontCardLocation(index) {
-        return document.getElementById("player" + index + "-front");
+    static getBackCardContainer(index, user) {
+        return document.getElementById(user + index + "-back");
     }
 
-    static getDealerFrontCardLocation(index) {
-        return document.getElementById("dealer" + index + "-front");
+    static getPlayerFrontCardContainer(index) {
+        return UI.getFrontCardContainer(index, "player");
+    }
+
+    static getDealerFrontCardContainer(index) {
+        return UI.getFrontCardContainer(index, "dealer");
+    }
+
+    static getFrontCardContainer(index, user) {
+        return document.getElementById(user + index + "-front");
     }
 
     static setOnDeckStyle() {
         let deck = document.getElementById("deck");
         let deckPosition = deck.getBoundingClientRect();
-        let deckLocationStyle = document.createElement('style');
-        deckLocationStyle.type = "text/css";
-        deckLocationStyle.innerHTML = `.onDeck { top: ${deckPosition.top}px !important; left: ${deckPosition.left}px !important; position: fixed; }`;
-        document.getElementsByTagName('head')[0].appendChild(deckLocationStyle);
+        let deckContainerStyle = document.createElement('style');
+        deckContainerStyle.type = "text/css";
+        deckContainerStyle.innerHTML = `.onDeck { top: ${deckPosition.top}px !important; left: ${deckPosition.left}px !important; position: fixed; }`;
+        document.getElementsByTagName('head')[0].appendChild(deckContainerStyle);
     }
 
     ////////// Print Methods \\\\\\\\\\
     static printPlayerScore(score) {
-        document.getElementById("playerScore").innerText = score;
+        UI.printScore(score, "player");
     }
 
     static printDealerScore(score) {
-        document.getElementById("dealerScore").innerText = score;
+        UI.printScore(score, "dealer");
     }
 
-    static placeCard(cardLocation) {
+    static printScore(score, user) {
+        document.getElementById(user + "Score").innerText = score;
+    }
+
+    static placeCard(cardContainer) {
         window.setTimeout(() => {
-            cardLocation.setAttribute("src", "./images/cards/blue_back.png");
-            cardLocation.parentElement.parentElement.classList.remove("onDeck");
-        }, UI.cardFlipDelay, cardLocation);
+            cardContainer.setAttribute("src", "./images/cards/blue_back.png");
+            cardContainer.parentElement.parentElement.classList.remove("onDeck");
+        }, UI.cardFlipDelay, cardContainer);
     }
 
-
-
-    static flipCard(cardLocation) {
-        cardLocation.parentElement.classList.add("is-flipped");
+    static flipCard(cardContainer) {
+        cardContainer.parentElement.classList.add("is-flipped");
     }
 
-    static unflipCard(cardLocation) {
-        cardLocation.parentElement.classList.remove("is-flipped");
+    static unflipCard(cardContainer) {
+        cardContainer.parentElement.classList.remove("is-flipped");
     }
 
-    static printCard(cardLocation, cardName) {
-        //set the src attribute of the image element "cardLocation" to "cardName.png"
-        cardLocation.setAttribute("src", "./images/cards/" + cardName + ".png");
+    static printCard(cardContainer, cardName) {
+        //set the src attribute of the image element "cardContainer" to "cardName.png"
+        cardContainer.setAttribute("src", "./images/cards/" + cardName + ".png");
     }
 
     static moveDealerCardToDeck(index) {
-        UI.getDealerFrontCardLocation(index).parentElement.parentElement.classList.add('onDeck');
+        UI.getDealerFrontCardContainer(index).parentElement.parentElement.classList.add('onDeck');
     }
 
     static movePlayerCardToDeck(index) {
-        UI.getPlayerFrontCardLocation(index).parentElement.parentElement.classList.add('onDeck');
+        UI.getPlayerFrontCardContainer(index).parentElement.parentElement.classList.add('onDeck');
     }
 
     static moveDealerCardToPlayArea(index) {
-        UI.getDealerFrontCardLocation(index).parentElement.parentElement.classList.remove('onDeck');
+        UI.getDealerFrontCardContainer(index).parentElement.parentElement.classList.remove('onDeck');
     }
 
     static movePlayerCardToPlayArea(index) {
-        UI.getPlayerFrontCardLocation(index).parentElement.parentElement.classList.remove('onDeck');
+        UI.getPlayerFrontCardContainer(index).parentElement.parentElement.classList.remove('onDeck');
     }
 
     ////////// Button Enable/Disable Methods \\\\\\\\\\
     static disableButton(buttonName) {
         document.getElementById(buttonName).setAttribute("disabled", "true");
     }
-    static disableActions() {
+    static disableActionButtons() {
         UI.actionButtons.forEach(button => {
             UI.disableButton(button);
         });
@@ -182,7 +190,7 @@ export default class UI {
         document.getElementById(buttonName).removeAttribute("disabled");
     }
 
-    static enableActions() {
+    static enableActionButtons() {
         UI.actionButtons.forEach(button => {
             UI.enableButton(button);
         });
@@ -198,18 +206,37 @@ export default class UI {
         document.getElementById("bet").removeAttribute("disabled");
     }
 
+    static addPlayerCard(index, card, score) {
+        UI.addCard(index, card, score, "player");
+    }
+
+    static addDealerCard(index, card, score) {
+        UI.addCard(index, card, score, "dealer");
+    }
+
+    static addCard(index, card, score, user) {
+        let cardFrontContainer = UI.getFrontCardContainer(index, user);
+
+        UI.placeCard(UI.getBackCardContainer(index, user));
+        UI.printCard(cardFrontContainer, card.getFileName());
+        window.setTimeout(() => {
+            UI.flipCard(cardFrontContainer);
+            UI.printScore(score, user);
+        }, UI.cardFlipDelay, cardFrontContainer, score);
+    }
+
     static removeAllCards() {
         for (let i = 0; i <= 5; i++) {
-            let playerFrontCardLocation = UI.getPlayerFrontCardLocation(i);
-            let dealerFrontCardLocation = UI.getDealerFrontCardLocation(i);
+            let playerFrontCardContainer = UI.getPlayerFrontCardContainer(i);
+            let dealerFrontCardContainer = UI.getDealerFrontCardContainer(i);
             UI.moveDealerCardToDeck(i);
             UI.movePlayerCardToDeck(i);
-            UI.unflipCard(playerFrontCardLocation);
-            UI.unflipCard(dealerFrontCardLocation);
-            playerFrontCardLocation.removeAttribute("src");
-            UI.getPlayerBackCardLocation(i).removeAttribute("src");
-            dealerFrontCardLocation.removeAttribute("src");
-            UI.getDealerBackCardLocation(i).removeAttribute("src");
+            UI.unflipCard(playerFrontCardContainer);
+            UI.unflipCard(dealerFrontCardContainer);
+            playerFrontCardContainer.removeAttribute("src");
+            UI.getPlayerBackCardContainer(i).removeAttribute("src");
+            dealerFrontCardContainer.removeAttribute("src");
+            UI.getDealerBackCardContainer(i).removeAttribute("src");
         }
     }
 }

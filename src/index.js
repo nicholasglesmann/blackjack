@@ -15,10 +15,6 @@ class Game {
         this.playerCurrentBet = 0;
         this.playerBetValue = 50;
 
-        this.dealerScorePrintQueue = [];
-
-        this.Actions = ["hit", "stand", "surrender"];
-
         ////////// Method Bindings \\\\\\\\\\
         this.mainGameLoop = this.mainGameLoop.bind(this);
         this.newHand = this.newHand.bind(this);
@@ -35,7 +31,7 @@ class Game {
 
         ////////// Initial Methods \\\\\\\\\\
         UI.setOnDeckStyle();
-        UI.setUpCardLocations();
+        UI.setUpCardContainers();
         this.addEventListeners();
         this.mainGameLoop();
     }
@@ -51,9 +47,9 @@ class Game {
     }
 
     mainGameLoop() {
-        UI.setUpHand(this.playerCash, this.playerBetValue);
+        UI.resetForNewHand(this.playerCash, this.playerBetValue);
         this.newHand();
-        UI.disableActions();
+        UI.disableActionButtons();
         this.checkGameOver();
         UI.enableBetting();
     }
@@ -73,8 +69,8 @@ class Game {
 
     dealInitialCards() {
         for (let i = 0; i < 2; i++) {
-            let playerCardLocation = UI.getPlayerFrontCardLocation(i);
-            let dealerCardLocation = UI.getDealerFrontCardLocation(i);
+            let playerCardContainer = UI.getPlayerFrontCardContainer(i);
+            let dealerCardContainer = UI.getDealerFrontCardContainer(i);
 
             let playerCard = this.gameDeck.dealCard();
             let dealerCard = this.gameDeck.dealCard();
@@ -82,8 +78,8 @@ class Game {
             this.playerHand.addCard(playerCard);
             this.dealerHand.addCard(dealerCard);
 
-            UI.printCard(playerCardLocation, playerCard.getFileName());
-            UI.printCard(dealerCardLocation, dealerCard.getFileName());
+            UI.printCard(playerCardContainer, playerCard.getFileName());
+            UI.printCard(dealerCardContainer, dealerCard.getFileName());
         }
     }
 
@@ -130,8 +126,6 @@ class Game {
     ////////// Click Methods \\\\\\\\\\
     hitClick() {
         let cardIndex = this.playerHand.getCardCount();
-        let cardFrontLocation = UI.getPlayerFrontCardLocation(cardIndex);
-        let cardBackLocation = UI.getPlayerBackCardLocation(cardIndex);
 
         let card = this.gameDeck.dealCard();
 
@@ -144,16 +138,11 @@ class Game {
             return this.playerBust();
         }
 
-        UI.placeCard(cardBackLocation);
-        UI.printCard(cardFrontLocation, card.getFileName());
-        window.setTimeout(() => {
-            UI.flipCard(cardFrontLocation);
-            UI.printPlayerScore(score);
-        }, UI.cardFlipDelay, cardFrontLocation, score);
+        UI.addPlayerCard(cardIndex, card, score);
     }
 
     standClick() {
-        UI.disableActions();
+        UI.disableActionButtons();
         this.dealerPlay();
     }
 
@@ -163,7 +152,7 @@ class Game {
 
     betClick() {
         UI.disableBetting();
-        UI.enableActions();
+        UI.enableActionButtons();
         UI.flipInitialCards();
 
         UI.printPlayerScore(this.playerHand.getScore());
@@ -216,7 +205,7 @@ class Game {
     }
 
     endHand() {
-        UI.disableActions();
+        UI.disableActionButtons();
 
         //clear variables
         this.gameDeck = {};
@@ -252,37 +241,30 @@ class Game {
 
     ////////// Dealer Methods \\\\\\\\\\
     dealerPlay() {
-        let printDelay = 1500;
-        let printPosition = 0;
+        let printDelay = 500;
 
         // reveal the initial card
-        let startingCardLocation = UI.getDealerFrontCardLocation(0);
+        let startingCardContainer = UI.getDealerFrontCardContainer(0);
         let startingCard = this.dealerHand.getCard(0);
-        UI.printCard(startingCardLocation, startingCard.getFileName());
+        UI.printCard(startingCardContainer, startingCard.getFileName());
         UI.printDealerScore(this.dealerHand.getScore());
-        UI.flipCard(startingCardLocation);
+        UI.flipCard(startingCardContainer);
 
         while (this.dealerHand.getScore() <= 17) {
             //get the new card position
-            let cardLocation = UI.getDealerFrontCardLocation(this.dealerHand.getCardCount());
+            let cardIndex = this.dealerHand.getCardCount();
 
             //deal a card
             let card = this.gameDeck.dealCard();
 
             this.dealerHand.addCard(card);
 
-            //delay printing image/score to the screen
+            let score = this.dealerHand.getScore();
+
+            //delay printing card/score to the screen
             setTimeout(() => {
-                UI.printCard(cardLocation, card.getFileName());
-
-                //print dealer score to the screen
-                document.getElementById("dealerScore").innerText = this.dealerScorePrintQueue[printPosition];
-                printPosition++;
-
-            }, printDelay, printPosition);
-
-            //update dealerScorePrintQueue array for delayed score printing
-            this.dealerScorePrintQueue.push(this.dealerHand.getScore());
+                UI.addDealerCard(cardIndex, card, score);
+            }, printDelay, cardIndex, card, score);
 
             //add 1000 ms between each image/score print
             printDelay += 1000;
@@ -298,5 +280,5 @@ let game;
 window.addEventListener('load', () => game = new Game());
 // window.addEventListener('resize', () => {
 //     UI.setOnDeckStyle();
-//     UI.setUpCardLocations();
+//     UI.setUpCardContainers();
 // });
