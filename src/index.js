@@ -50,6 +50,14 @@ class Game {
         document.getElementById("upArrow").addEventListener("click", () => { this.increaseBet(); });
     }
 
+    mainGameLoop() {
+        UI.setUpHand(this.playerCash, this.playerBetValue);
+        this.newHand();
+        UI.disableActions();
+        this.checkGameOver();
+        UI.enableBetting();
+    }
+
     ////////// New Hand Methods \\\\\\\\\\
     newHand() {
         this.gameDeck = new Deck(52);
@@ -58,7 +66,9 @@ class Game {
         this.playerHand = new Hand();
         this.dealerHand = new Hand();
 
-        this.dealInitialCards();
+        window.setTimeout(() => {
+            this.dealInitialCards();
+        }, UI.cardFlipDelay + 100);
     }
 
     dealInitialCards() {
@@ -75,14 +85,6 @@ class Game {
             UI.printCard(playerCardLocation, playerCard.getFileName());
             UI.printCard(dealerCardLocation, dealerCard.getFileName());
         }
-    }
-
-    mainGameLoop() {
-        UI.setUpHand(this.playerCash, this.playerBetValue);
-        this.newHand();
-        UI.disableActions();
-        this.checkGameOver();
-        UI.enableBetting();
     }
 
     increaseBet() {
@@ -137,15 +139,17 @@ class Game {
 
         let score = this.playerHand.getScore();
 
-        UI.placeCard(cardBackLocation);
-        UI.printCard(cardFrontLocation, card.getFileName());
-        UI.flipCard(cardFrontLocation);
-        UI.printPlayerScore(score);
-
         //if score over 21, hand over
         if (score > 21) {
-            this.playerBust();
+            return this.playerBust();
         }
+
+        UI.placeCard(cardBackLocation);
+        UI.printCard(cardFrontLocation, card.getFileName());
+        window.setTimeout(() => {
+            UI.flipCard(cardFrontLocation);
+            UI.printPlayerScore(score);
+        }, UI.cardFlipDelay, cardFrontLocation, score);
     }
 
     standClick() {
@@ -292,3 +296,7 @@ class Game {
 
 let game;
 window.addEventListener('load', () => game = new Game());
+// window.addEventListener('resize', () => {
+//     UI.setOnDeckStyle();
+//     UI.setUpCardLocations();
+// });
