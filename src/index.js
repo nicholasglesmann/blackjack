@@ -88,7 +88,6 @@ class Game {
         window.setTimeout(() => {
             this.dealInitialCards();
         }, Time.short);
-        this.isPlaying = false;
         this.checkIfPlaying();
     }
 
