@@ -161,12 +161,12 @@ class Game {
 
         let score = this.playerHand.getScore();
 
+        UI.addPlayerCard(cardIndex, card, score);
+
         //if score over 21, hand over
         if (score > 21) {
             return this.playerBust();
         }
-
-        UI.addPlayerCard(cardIndex, card, score);
     }
 
     standClick() {
@@ -240,7 +240,9 @@ class Game {
     playerBust() {
         let lostAmount = this.playerCurrentBet;
         UI.displayModalMessage(Text.playerBust + lostAmount);
-        this.endHand();
+        window.setTimeout(() => {
+            this.endHand();
+        }, Time.medium);
     }
 
     dealerBust() {
