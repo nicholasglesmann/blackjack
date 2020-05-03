@@ -1,8 +1,9 @@
 import Animate from './Animate.js';
+import Time from './Time.js';
+
 
 export default class UI {
 
-    static cardFlipDelay = 200;
 
     static actionButtons = ["hit", "stand", "surrender"];
 
@@ -51,13 +52,13 @@ export default class UI {
                 UI.placeCard(document.getElementById("player" + i + "-back"));
             }, animationDelay, i);
 
-            animationDelay += UI.cardFlipDelay;
+            animationDelay += Time.instant;
 
             window.setTimeout(() => {
                 UI.placeCard(document.getElementById("dealer" + i + "-back"));
             }, animationDelay, i);
 
-            animationDelay += UI.cardFlipDelay;
+            animationDelay += Time.instant;
         }
 
         document.getElementById("playerBetSelection").innerHTML = "$" + playerBet;
@@ -73,7 +74,7 @@ export default class UI {
                 UI.flipCard(playerCardElement);
             }, animationDelay);
 
-            animationDelay += UI.cardFlipDelay;
+            animationDelay += Time.instant;
 
             window.setTimeout(() => {
                 // Don't flip the first dealer card yet
@@ -82,7 +83,7 @@ export default class UI {
                 }
             }, animationDelay);
 
-            animationDelay += UI.cardFlipDelay;
+            animationDelay += Time.instant;
         }
     }
 
@@ -146,7 +147,7 @@ export default class UI {
         window.setTimeout(() => {
             cardContainer.setAttribute("src", "./images/cards/blue_back.png");
             cardContainer.parentElement.parentElement.classList.remove("onDeck");
-        }, UI.cardFlipDelay, cardContainer);
+        }, Time.instant, cardContainer);
     }
 
     static flipCard(cardContainer) {
@@ -226,7 +227,7 @@ export default class UI {
         window.setTimeout(() => {
             UI.flipCard(cardFrontContainer);
             UI.printScore(score, user);
-        }, UI.cardFlipDelay, cardFrontContainer, score);
+        }, Time.instant, cardFrontContainer, score);
     }
 
     static removeAllCards() {
@@ -247,18 +248,18 @@ export default class UI {
 
 
     //---------- MODAL METHODS ------------\\
-    static displayModalMessage(message) {
+    static displayModalMessage(message, displayLength) {
         if (Animate.isModalShown) {
             UI.displayDelayedModalMessage(message)
         } else {
             document.getElementById('modal-message').innerText = message;
-            Animate.modal();
+            Animate.modal(displayLength);
         }
     }
 
-    static displayDelayedModalMessage(message) {
+    static displayDelayedModalMessage(message, displayLength) {
         window.setTimeout(() => {
-            UI.displayModalMessage(message);
-        }, Animate.modalDisplayLength, message);
+            UI.displayModalMessage(message, displayLength);
+        }, displayLength, message);
     }
 }

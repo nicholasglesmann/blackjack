@@ -1,5 +1,6 @@
+import Time from './Time.js';
+
 export default class Animate {
-    static modalDisplayLength = 1500;
     static isModalShown = false;
 
     static showModal() {
@@ -12,12 +13,16 @@ export default class Animate {
         document.getElementById('info-modal-text').classList.add('clear-modal');
     }
 
-    static modal() {
+    static modal(displayLength) {
+        if (!displayLength) {
+            displayLength = Time.medium;
+        }
+
         Animate.showModal();
         Animate.isModalShown = true;
         window.setTimeout(() => {
             Animate.isModalShown = false;
             Animate.hideModal();
-        }, Animate.modalDisplayLength);
+        }, displayLength);
     }
 }

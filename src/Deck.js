@@ -2,6 +2,7 @@ import Card from './Card.js';
 
 export default class Deck {
     constructor() {
+        this.isDeckStacked = false;
 
         ////////// Class Variables \\\\\\\\\\
         this.deck = this.createDeck();
@@ -10,6 +11,14 @@ export default class Deck {
         this.createDeck = this.createDeck.bind(this);
         this.shuffleDeck = this.shuffleDeck.bind(this);
         this.dealCard = this.dealCard.bind(this);
+        this.stackDeck = this.stackDeck.bind(this);
+
+        // Stacked deck for testing blackjacks
+        if (this.isDeckStacked) {
+            this.stackDeck();
+        } else {
+            this.shuffleDeck();
+        }
     }
 
     getCardCount() {
@@ -17,14 +26,14 @@ export default class Deck {
     }
 
     createDeck() {
-        let newDeck = [];
+        let deck = [];
         for (let suit = 0; suit <= 3; suit++) {
             for (let value = 1; value <= 13; value++) {
-                let c = new Card(suit, value);
-                newDeck.push(c);
+                let card = new Card(suit, value);
+                deck.push(card);
             }
         }
-        return newDeck;
+        return deck;
     }
 
     shuffleDeck() {
@@ -43,5 +52,32 @@ export default class Deck {
             return this.deck.pop();
         else
             console.log("Deal Card Error.");
+    }
+
+    // Stacked deck for testing blackjacks
+    stackDeck() {
+
+        // // Test Push with blackjacks
+        // for (let i = 0; i < 2; i++) {
+        //     let card = new Card(0, 1);
+        //     this.deck.push(card);
+        // }
+        // for (let i = 0; i < 2; i++) {
+        //     let card = new Card(0, 10);
+        //     this.deck.push(card);
+        // }
+
+
+        // Test Player blackjack
+        for (let i = 0; i < 1; i++) {
+            let card = new Card(0, 1);
+            this.deck.push(card);
+        }
+        for (let i = 0; i < 2; i++) {
+            let card = new Card(0, 10);
+            this.deck.push(card);
+        }
+
+
     }
 }

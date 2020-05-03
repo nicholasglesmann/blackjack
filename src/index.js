@@ -2,6 +2,7 @@ import Deck from './Deck.js';
 import Hand from './Hand.js';
 import UI from './UI.js';
 import Text from './Text.js';
+import Time from './Time.js';
 
 class Game {
     constructor() {
@@ -35,12 +36,14 @@ class Game {
 
     ////////// Initial Methods \\\\\\\\\\
     startGame() {
+        UI.displayModalMessage(Text.welcome, Time.medium);
+        UI.displayModalMessage(Text.placeBet, Time.long);
         UI.setOnDeckStyle();
         UI.setUpCardContainers();
         this.addEventListeners();
 
         this.gameDeck = new Deck(52);
-        this.gameDeck.shuffleDeck();
+        //this.gameDeck.shuffleDeck();
 
         this.playerHand = new Hand();
         this.dealerHand = new Hand();
@@ -57,7 +60,6 @@ class Game {
         document.getElementById("upArrow").addEventListener("click", () => { this.increaseBet(); });
     }
 
-
     mainGameLoop() {
         UI.resetForNewHand(this.playerCash, this.playerBetValue);
         this.newHand();
@@ -69,14 +71,14 @@ class Game {
     ////////// New Hand Methods \\\\\\\\\\
     newHand() {
         if (this.gameDeck.getCardCount() < 20) {
-            UI.displayModalMessage(Text.suffle);
+            UI.displayModalMessage(Text.shuffle);
             this.gameDeck = new Deck(52);
-            this.gameDeck.shuffleDeck();
+            //this.gameDeck.shuffleDeck();
         }
 
         window.setTimeout(() => {
             this.dealInitialCards();
-        }, UI.cardFlipDelay + 100);
+        }, Time.short);
     }
 
     dealInitialCards() {
@@ -179,9 +181,30 @@ class Game {
         this.playerCurrentBet = document.getElementById("playerBetSelection").innerHTML.substring(1);
         this.playerCash -= Number(this.playerCurrentBet);
         this.updateMoney();
+
+        this.checkBlackjack();
     }
 
     ////////// Score Methods \\\\\\\\\\
+    checkBlackjack() {
+        if (this.playerHand.getScore() !== 21) {
+            return;
+        }
+
+        if (this.playerHand.getCardCount() !== 2) {
+            return;
+        }
+
+        this.dealerFlipInitialCard();
+
+        if (this.dealerHand.getScore() === 21) {
+            this.playerPush();
+        } else {
+            this.playerBlackjack();
+        }
+    }
+
+
     compareScores() {
         let playerScore = this.playerHand.getScore();
         let dealerScore = this.dealerHand.getScore();
@@ -213,7 +236,9 @@ class Game {
 
     playerPush() {
         UI.displayModalMessage(Text.push + this.playerCurrentBet);
-        this.endHand();
+        window.setTimeout(() => {
+            this.endHand();
+        }, Time.medium);
     }
 
     playerWin() {
@@ -227,6 +252,15 @@ class Game {
         let lostAmount = this.playerCurrentBet;
         UI.displayModalMessage(Text.playerLoseMoney + lostAmount);
         this.endHand();
+    }
+
+    playerBlackjack() {
+        let winAmount = Number(this.playerCurrentBet) + ((Number(this.playerCurrentBet) / 2) * 3);
+        this.playerCash += winAmount;
+        UI.displayModalMessage(Text.playerBlackjack + winAmount, Time.veryLong);
+        window.setTimeout(() => {
+            this.endHand();
+        }, Time.long);
     }
 
     endHand() {
@@ -265,15 +299,19 @@ class Game {
     }
 
     ////////// Dealer Methods \\\\\\\\\\
-    dealerPlay() {
-        let printDelay = 500;
-
-        // reveal the initial card
+    dealerFlipInitialCard() {
         let startingCardContainer = UI.getDealerFrontCardContainer(0);
         let startingCard = this.dealerHand.getCard(0);
         UI.printCard(startingCardContainer, startingCard.getFileName());
         UI.printDealerScore(this.dealerHand.getScore());
         UI.flipCard(startingCardContainer);
+    }
+
+
+    dealerPlay() {
+        let printDelay = Time.veryShort;
+
+        this.dealerFlipInitialCard();
 
         while (this.dealerHand.getScore() <= 17) {
             //get the new card position
@@ -292,14 +330,11 @@ class Game {
             }, printDelay, cardIndex, card, score);
 
             //add 1000 ms between each image/score print
-            printDelay += 1000;
+            printDelay += Time.short;
         }
 
-        printDelay += 1000;
-
-        // speed up the printing of dealer bust
-        if (this.dealerHand.getScore() > 21) {
-            printDelay = 1500;
+        if (printDelay < Time.long) {
+            printDelay += Time.short;
         }
 
         setTimeout(() => { this.compareScores(); }, printDelay);
@@ -308,7 +343,12 @@ class Game {
 
 
 let game;
-window.addEventListener('load', () => game = new Game());
+window.addEventListener('load', () => {
+    window.setTimeout(() => {
+        document.getElementById('game-start-background').classList.add('transparent');
+    }, Time.instant);
+    game = new Game();
+});
 // window.addEventListener('resize', () => {
 //     UI.setOnDeckStyle();
 //     UI.setUpCardContainers();

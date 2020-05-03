@@ -4,7 +4,6 @@
 }
 
 body {
-    background-color: aliceblue;
     max-width: 100vw;
     max-height: 100vh;
     overflow: hidden;
@@ -13,7 +12,7 @@ body {
 
 h1 {
     font-weight: bold;
-    font-size: 3rem;
+    font-size: 5.5rem;
     margin-top: 1rem;
     letter-spacing: .3rem;
 }
@@ -24,6 +23,11 @@ h6 {
 
 .faded {
     opacity: 0.5;
+}
+
+.transparent {
+    opacity: 0.0 !important;
+    pointer-events: none !important;
 }
 
 .gameOver {
@@ -115,6 +119,16 @@ h6 {
 .info-area {
     margin-top: 1.5rem;
     display: inline-block;
+}
+
+#game-start-background {
+    opacity: 1.0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    transition: opacity 0.3s ease-in-out;
 }
 
 #heading-area {
