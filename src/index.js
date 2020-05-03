@@ -17,6 +17,8 @@ class Game {
         this.playerCurrentBet = 0;
         this.playerBetValue = 100;
 
+        this.isPlaying = false;
+
         ////////// Method Bindings \\\\\\\\\\
         this.mainGameLoop = this.mainGameLoop.bind(this);
         this.newHand = this.newHand.bind(this);
@@ -43,7 +45,6 @@ class Game {
         this.addEventListeners();
 
         this.gameDeck = new Deck(52);
-        //this.gameDeck.shuffleDeck();
 
         this.playerHand = new Hand();
         this.dealerHand = new Hand();
@@ -68,17 +69,27 @@ class Game {
         UI.enableBetting();
     }
 
+    checkIfPlaying() {
+        window.setTimeout(() => {
+            if (!this.isPlaying) {
+                UI.displayModalMessage(Text.placeBet);
+                this.checkIfPlaying();
+            }
+        }, Time.untilPrompt);
+    }
+
     ////////// New Hand Methods \\\\\\\\\\
     newHand() {
         if (this.gameDeck.getCardCount() < 20) {
             UI.displayModalMessage(Text.shuffle);
             this.gameDeck = new Deck(52);
-            //this.gameDeck.shuffleDeck();
         }
 
         window.setTimeout(() => {
             this.dealInitialCards();
         }, Time.short);
+        this.isPlaying = false;
+        this.checkIfPlaying();
     }
 
     dealInitialCards() {
@@ -102,6 +113,8 @@ class Game {
             return;
         }
 
+        this.isPlaying = true;
+
         //get current bet ammount        
         let betSelection = document.getElementById("playerBetSelection");
         let betAmount = Number(betSelection.innerHTML.substring(1));
@@ -121,6 +134,8 @@ class Game {
         if (UI.isBettingDisabled) {
             return;
         }
+
+        this.isPlaying = true;
 
         //get current bet ammount
         let betSelection = document.getElementById("playerBetSelection");
@@ -165,6 +180,8 @@ class Game {
     }
 
     betClick() {
+        this.isPlaying = true;
+
         UI.disableBetting();
 
         // Fixes a bug by delaying the enabling of these actions

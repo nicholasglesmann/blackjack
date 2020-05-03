@@ -186,7 +186,7 @@ h6 {
     padding: 2rem;
     background: radial-gradient(#343A40 1%, transparent 99%);
     border-radius: 100%;
-    opacity: 0.5;
+    opacity: 0.7;
     transition: opacity 0.5s ease-in-out;
 }
 

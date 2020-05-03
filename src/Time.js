@@ -6,4 +6,6 @@ export default class Time {
     static long = 2000;
     static veryLong = 3000;
     static eternal = 5000;
+
+    static untilPrompt = 8000;
 }

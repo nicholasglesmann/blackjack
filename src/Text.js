@@ -1,6 +1,6 @@
 export default class Text {
     static welcome = "Welcome to BLACKJACK";
-    static placeBet = "Place a bet to begin"
+    static placeBet = "Place a Bet to Start"
 
     static playerBust = "You Busted and Lost $";
     static dealerBust = "Dealer Busted and You Won $";

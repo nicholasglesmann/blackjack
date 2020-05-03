@@ -44,7 +44,7 @@ export default class UI {
         document.getElementById("dealerScore").innerText = 0;
         document.getElementById("playerCash").innerHTML = "Total Cash: $" + playerCash;
 
-        let animationDelay = 0;
+        let animationDelay = Time.veryShort;
 
         // Stagger inital card animations
         for (let i = 0; i < 2; i++) {
