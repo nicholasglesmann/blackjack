@@ -1,10 +1,10 @@
 import Card from './Card.js';
 
 export default class Deck {
-    constructor(numOfCards) {
+    constructor() {
 
         ////////// Class Variables \\\\\\\\\\
-        this.deck = this.createDeck(numOfCards);
+        this.deck = this.createDeck();
 
         ////////// Method Bindings \\\\\\\\\\
         this.createDeck = this.createDeck.bind(this);
@@ -12,7 +12,11 @@ export default class Deck {
         this.dealCard = this.dealCard.bind(this);
     }
 
-    createDeck(numOfCards) {
+    getCardCount() {
+        return this.deck.length;
+    }
+
+    createDeck() {
         let newDeck = [];
         for (let suit = 0; suit <= 3; suit++) {
             for (let value = 1; value <= 13; value++) {

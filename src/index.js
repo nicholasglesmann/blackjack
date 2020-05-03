@@ -1,6 +1,7 @@
 import Deck from './Deck.js';
 import Hand from './Hand.js';
 import UI from './UI.js';
+import Text from './Text.js';
 
 class Game {
     constructor() {
@@ -13,7 +14,7 @@ class Game {
 
         this.playerCash = 1000;
         this.playerCurrentBet = 0;
-        this.playerBetValue = 50;
+        this.playerBetValue = 100;
 
         ////////// Method Bindings \\\\\\\\\\
         this.mainGameLoop = this.mainGameLoop.bind(this);
@@ -29,14 +30,24 @@ class Game {
         this.updateMoney = this.updateMoney.bind(this);
         this.checkGameOver = this.checkGameOver.bind(this);
 
-        ////////// Initial Methods \\\\\\\\\\
-        UI.setOnDeckStyle();
-        UI.setUpCardContainers();
-        this.addEventListeners();
-        this.mainGameLoop();
+        this.startGame();
     }
 
     ////////// Initial Methods \\\\\\\\\\
+    startGame() {
+        UI.setOnDeckStyle();
+        UI.setUpCardContainers();
+        this.addEventListeners();
+
+        this.gameDeck = new Deck(52);
+        this.gameDeck.shuffleDeck();
+
+        this.playerHand = new Hand();
+        this.dealerHand = new Hand();
+
+        this.mainGameLoop();
+    }
+
     addEventListeners() {
         document.getElementById("hit").addEventListener("click", () => { this.hitClick(); });
         document.getElementById("stand").addEventListener("click", () => { this.standClick(); });
@@ -45,6 +56,7 @@ class Game {
         document.getElementById("downArrow").addEventListener("click", () => { this.decreaseBet(); });
         document.getElementById("upArrow").addEventListener("click", () => { this.increaseBet(); });
     }
+
 
     mainGameLoop() {
         UI.resetForNewHand(this.playerCash, this.playerBetValue);
@@ -56,11 +68,11 @@ class Game {
 
     ////////// New Hand Methods \\\\\\\\\\
     newHand() {
-        this.gameDeck = new Deck(52);
-        this.gameDeck.shuffleDeck();
-
-        this.playerHand = new Hand();
-        this.dealerHand = new Hand();
+        if (this.gameDeck.getCardCount() < 20) {
+            UI.displayModalMessage(Text.suffle);
+            this.gameDeck = new Deck(52);
+            this.gameDeck.shuffleDeck();
+        }
 
         window.setTimeout(() => {
             this.dealInitialCards();
@@ -152,7 +164,12 @@ class Game {
 
     betClick() {
         UI.disableBetting();
-        UI.enableActionButtons();
+
+        // Fixes a bug by delaying the enabling of these actions
+        window.setTimeout(() => {
+            UI.enableActionButtons();
+        }, UI.cardFlipDelay);
+
         UI.flipInitialCards();
 
         UI.printPlayerScore(this.playerHand.getScore());
@@ -182,34 +199,40 @@ class Game {
 
     ////////// Finish Round Methods \\\\\\\\\\
     playerBust() {
-        console.log("player bust");
-        this.dealerWin();
+        let lostAmount = this.playerCurrentBet;
+        UI.displayModalMessage(Text.playerBust + lostAmount);
+        this.endHand();
     }
 
     dealerBust() {
-        console.log("dealer bust");
-        this.playerWin();
+        let winAmount = Number(this.playerCurrentBet) * 2;
+        this.playerCash += winAmount;
+        UI.displayModalMessage(Text.dealerBust + winAmount);
+        this.endHand();
     }
 
     playerPush() {
+        UI.displayModalMessage(Text.push + this.playerCurrentBet);
         this.endHand();
     }
 
     playerWin() {
-        this.playerCash += (Number(this.playerCurrentBet) * 2);
+        let winAmount = Number(this.playerCurrentBet) * 2;
+        this.playerCash += winAmount;
+        UI.displayModalMessage(Text.playerWinMoney + winAmount);
         this.endHand();
     }
 
     dealerWin() {
+        let lostAmount = this.playerCurrentBet;
+        UI.displayModalMessage(Text.playerLoseMoney + lostAmount);
         this.endHand();
     }
 
     endHand() {
         UI.disableActionButtons();
 
-        //clear variables
-        this.gameDeck = {};
-
+        // Hands should be reset before UI.removeAllCards
         this.dealerHand = new Hand();
         this.playerHand = new Hand();
 
@@ -222,14 +245,16 @@ class Game {
 
     checkGameOver() {
         if (this.playerCash <= 0) {
-            let bodySelector = document.getElementsByTagName("body");
-            let body = bodySelector[0];
-            let allElements = document.getElementsByTagName("*");
-            for (let i = 0; i < allElements.length; i++) {
-                allElements[i].classList.add("hidden");
-            }
-            body.classList.remove("hidden");
-            body.classList.add("gameOver");
+            window.setTimeout(() => {
+                let bodySelector = document.getElementsByTagName("body");
+                let body = bodySelector[0];
+                let allElements = document.getElementsByTagName("*");
+                for (let i = 0; i < allElements.length; i++) {
+                    allElements[i].classList.add("hidden");
+                }
+                body.classList.remove("hidden");
+                body.classList.add("gameOver");
+            }, 2000);
         }
     }
 
@@ -271,6 +296,12 @@ class Game {
         }
 
         printDelay += 1000;
+
+        // speed up the printing of dealer bust
+        if (this.dealerHand.getScore() > 21) {
+            printDelay = 1500;
+        }
+
         setTimeout(() => { this.compareScores(); }, printDelay);
     }
 }

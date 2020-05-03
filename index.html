@@ -8,6 +8,176 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="src/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+
+
+    <title>Blackjack</title>
+</head>
+
+<body>
+    <div class="container-fluid text-dark">
+        <div id="heading-area" class="row mb-0 mb-xl-5">
+            <div class="col-12">
+                <div id="heading">
+                    <h1>BLACKJACK</h1>
+                    <h6 class="mb-1">Place a bet to begin.</h6>
+                </div>
+            </div>
+        </div>
+        <div id="gameplay-area" class="row my-auto">
+            <div class="col-12">
+                <div class="row justify-content-center mb-5 mt-0">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <img id="deck" class="mt-3" src="./images/cards/blue_back.png"></img>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="dealer-area" class="">
+                            <div id="dealer0" class="card-scene">
+                                <div class="card my-0 py-0">
+                                    <img id="dealer0-back" class="card-face card-front" src=""></img>
+                                    <img id="dealer0-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                            <div id="dealer1" class="card-scene overlap-card">
+                                <div class="card my-0 py-0">
+                                    <img id="dealer1-back" class="card-face card-front" src=""></img>
+                                    <img id="dealer1-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                            <div id="dealer2" class="card-scene overlap-card">
+                                <div class="card my-0 py-0">
+                                    <img id="dealer2-back" class="card-face card-front" src=""></img>
+                                    <img id="dealer2-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                            <div id="dealer3" class="card-scene overlap-card">
+                                <div class="card my-0 py-0">
+                                    <img id="dealer3-back" class="card-face card-front" src=""></img>
+                                    <img id="dealer3-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                            <div id="dealer4" class="card-scene overlap-card">
+                                <div class="card my-0 py-0">
+                                    <img id="dealer4-back" class="card-face card-front" src=""></img>
+                                    <img id="dealer4-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                            <div id="dealer5" class="card-scene overlap-card">
+                                <div class="card my-0 py-0">
+                                    <img id="dealer5-back" class="card-face card-front" src=""></img>
+                                    <img id="dealer5-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 my-auto text-center">
+                        <div id="dealerScore" class="circle bg-dark text-light">
+                            0
+                        </div>
+                        <div class="mt-2">
+                            <h5>Dealer Score</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-2"></div>
+                    <div id="action-area" class="col-md-2">
+                        <div class="btn-group-lg btn-group-vertical mt-4">
+                            <button id="hit" class="btn btn-secondary">Hit</button>
+                            <button id="stand" class="btn btn-dark">Stand</button>
+                            <button id="surrender" class="btn btn-danger">Surrender</button>
+                        </div>
+                        <div id="playerBetArea" class="mt-3">
+                            <div class="row justify-content-center">
+                                <div class="col-2">
+                                </div>
+                                <div class="col-8 d-flex justify-content-center">
+                                    <i id="downArrow" class="fas fa-caret-left fa-3x mr-2"></i>
+                                    <h3 id="playerBetSelection" class="my-auto d-inline-block">$9999</h3>
+                                    <i id="upArrow" class="fas fa-caret-right fa-3x ml-2"></i>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                            </div>
+                        </div>
+                        <button id="bet" class="btn btn-lg btn-primary">Place Bet</button>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="player-area" class="">
+                            <div id="player0" class="card-scene">
+                                <div class="card my-0 py-0">
+                                    <img id="player0-back" class="card-face card-front" src=""></img>
+                                    <img id="player0-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                            <div id="player1" class="card-scene overlap-card">
+                                <div class="card my-0 py-0">
+                                    <img id="player1-back" class="card-face card-front" src=""></img>
+                                    <img id="player1-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                            <div id="player2" class="card-scene overlap-card">
+                                <div class="card my-0 py-0">
+                                    <img id="player2-back" class="card-face card-front" src=""></img>
+                                    <img id="player2-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                            <div id="player3" class="card-scene overlap-card">
+                                <div class="card my-0 py-0">
+                                    <img id="player3-back" class="card-face card-front" src=""></img>
+                                    <img id="player3-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                            <div id="player4" class="card-scene overlap-card">
+                                <div class="card my-0 py-0">
+                                    <img id="player4-back" class="card-face card-front" src=""></img>
+                                    <img id="player4-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                            <div id="player5" class="card-scene overlap-card">
+                                <div class="card my-0 py-0">
+                                    <img id="player5-back" class="card-face card-front" src=""></img>
+                                    <img id="player5-front" class="card-face card-back" src=""></img>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 my-auto text-center">
+                        <div id="playerScore" class="circle bg-dark text-light">
+                            0
+                        </div>
+                        <div class="mt-2">
+                            <h5>Player Score</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="scoring-area" class="row justify-content-center mb-3">
+        <div class="col-md-2"></div>
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+            <h4 id="playerHands" class="playerInfo info-area my-auto">Hands Played: 0</h4>
+        </div>
+        <div class="col-md-2">
+            <h4 id="playerBet" class="playerInfo info-area my-auto">Current Bet: $0</h4>
+        </div>
+        <div class="col-md-2">
+            <h4 id="playerCash" class="playerInfo info-area my-auto">Total Cash: $0</h4>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    </div>
+
+    <div id="info-modal-background" class="clear-modal-background clear-modal">
+    </div>
+    <div id="info-modal-text" class="row text-center justify-content-center clear-modal">
+        <h2 id="modal-message" class="my-auto text-light text-center"></h2>
+    </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -17,157 +187,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-    <title>Blackjack</title>
-</head>
-
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <div id="heading">
-                    <h1>BLACKJACK</h1>
-                    <h6>Place a bet to begin.</h6>
-                </div>
-            </div>
-            <div class="col-md-2"></div>
-        </div>
-        <div class="row justify-content-center my-4">
-            <div class="col-md-2"></div>
-            <div class="col-md-2">
-                <img id="deck" class="mt-3" src="./images/cards/blue_back.png"></img>
-            </div>
-            <div class="col-md-5">
-                <div id="dealer-area" class="">
-                    <div id="dealer0" class="card-scene">
-                        <div class="card my-0 py-0">
-                            <img id="dealer0-back" class="card-face card-front" src=""></img>
-                            <img id="dealer0-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                    <div id="dealer1" class="card-scene overlap-card">
-                        <div class="card my-0 py-0">
-                            <img id="dealer1-back" class="card-face card-front" src=""></img>
-                            <img id="dealer1-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                    <div id="dealer2" class="card-scene overlap-card">
-                        <div class="card my-0 py-0">
-                            <img id="dealer2-back" class="card-face card-front" src=""></img>
-                            <img id="dealer2-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                    <div id="dealer3" class="card-scene overlap-card">
-                        <div class="card my-0 py-0">
-                            <img id="dealer3-back" class="card-face card-front" src=""></img>
-                            <img id="dealer3-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                    <div id="dealer4" class="card-scene overlap-card">
-                        <div class="card my-0 py-0">
-                            <img id="dealer4-back" class="card-face card-front" src=""></img>
-                            <img id="dealer4-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                    <div id="dealer5" class="card-scene overlap-card">
-                        <div class="card my-0 py-0">
-                            <img id="dealer5-back" class="card-face card-front" src=""></img>
-                            <img id="dealer5-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-1 my-auto text-center">
-                <div id="dealerScore" class="circle">
-                    0
-                </div>
-                <div class="mt-2">
-                    <h5>Dealer Score</h5>
-                </div>
-            </div>
-            <div class="col-md-2"></div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-md-2"></div>
-            <div id="action-area" class="col-md-2">
-                <div class="btn-group-lg btn-group-vertical mt-4">
-                    <button id="hit" class="btn btn-success">Hit</button>
-                    <button id="stand" class="btn btn-success">Stand</button>
-                    <button id="surrender" class="btn btn-success">Surrender</button>
-                </div>
-                <div class="playerBetArea mt-3">
-                    <img id="downArrow" class="arrows" src="./images/sort-down.png" alt="">
-                    <h4 id="playerBetSelection">$0</h4>
-                    <img id="upArrow" class="arrows" src="./images/sort-up.png" alt="">
-                </div>
-                <button id="bet" class="btn btn-lg btn-success">Place Bet</button>
-            </div>
-            <div class="col-md-5">
-                <div id="player-area" class="">
-                    <div id="player0" class="card-scene">
-                        <div class="card my-0 py-0">
-                            <img id="player0-back" class="card-face card-front" src=""></img>
-                            <img id="player0-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                    <div id="player1" class="card-scene overlap-card">
-                        <div class="card my-0 py-0">
-                            <img id="player1-back" class="card-face card-front" src=""></img>
-                            <img id="player1-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                    <div id="player2" class="card-scene overlap-card">
-                        <div class="card my-0 py-0">
-                            <img id="player2-back" class="card-face card-front" src=""></img>
-                            <img id="player2-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                    <div id="player3" class="card-scene overlap-card">
-                        <div class="card my-0 py-0">
-                            <img id="player3-back" class="card-face card-front" src=""></img>
-                            <img id="player3-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                    <div id="player4" class="card-scene overlap-card">
-                        <div class="card my-0 py-0">
-                            <img id="player4-back" class="card-face card-front" src=""></img>
-                            <img id="player4-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                    <div id="player5" class="card-scene overlap-card">
-                        <div class="card my-0 py-0">
-                            <img id="player5-back" class="card-face card-front" src=""></img>
-                            <img id="player5-front" class="card-face card-back" src=""></img>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-1 my-auto text-center">
-                <div id="playerScore" class="circle">
-                    0
-                </div>
-                <div class="mt-2">
-                    <h5>Player Score</h5>
-                </div>
-            </div>
-            <div class="col-md-2"></div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-2"></div>
-        <div class="col-md-2">
-
-        </div>
-        <div class="col-md-2">
-            <h4 id="playerBet" class="playerInfo info-area">Current Bet: $0</h4>
-        </div>
-        <div class="col-md-2">
-            <h4 id="playerCash" class="playerInfo info-area">Total Cash: $0</h4>
-        </div>
-        <div class="col-md-4"></div>
-    </div>
-    </div>
-
+    <script src="https://kit.fontawesome.com/358b1b3615.js" crossorigin="anonymous"></script>
     <script type="module" src="src/index.js"></script>
 </body>
 

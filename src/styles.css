@@ -1,8 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background-color: aliceblue;
     max-width: 100vw;
     max-height: 100vh;
     overflow: hidden;
+    font-family: 'Anton', sans-serif;
 }
 
 h1 {
@@ -16,9 +22,8 @@ h6 {
     margin-bottom: 2rem;
 }
 
-* {
-    margin: 0;
-    padding: 0;
+.faded {
+    opacity: 0.5;
 }
 
 .gameOver {
@@ -90,11 +95,11 @@ h6 {
     display: inline-block;
 }
 
-.playerBetArea {
+/* #playerBetArea {
     margin: auto;
     margin-top: -2rem;
     text-align: center;
-}
+} */
 
 .circle {
     position: relative;
@@ -102,10 +107,6 @@ h6 {
     width: 120px;
     padding: 0;
     border-radius: 50%;
-
-    background: black;
-    color: white;
-    font-family: Helvetica, Arial Black, sans;
     font-size: 48px;
     text-align: center;
     vertical-align: middle;
@@ -116,6 +117,21 @@ h6 {
     display: inline-block;
 }
 
+#heading-area {
+    height: 15vh;
+}
+
+#gameplay-area {
+    height: 75vh;
+}
+
+#scoring-area {
+    height: 10vh;
+}
+
+#playerBetArea {
+    transition: all 0.3s ease-in-out;
+}
 
 #playerBetSelection {
     text-align: center;
@@ -142,26 +158,46 @@ h6 {
     margin-right: auto;
 }
 
-#dealer-area {
+/* #dealer-area {
     height: 100%;
+} */
+
+#info-modal-background {
+    transform: translate(-50%, -50%);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 150vh;
+    width: 150vw;
+    padding: 2rem;
+    background: radial-gradient(#343A40 1%, transparent 99%);
+    border-radius: 100%;
+    opacity: 0.5;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.clear-modal {
+    opacity: 0.0 !important;
+    pointer-events: none;
+}
+
+#info-modal-text {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -51%);
+    height: 150vh;
+    width: 150vw;
+    padding: 2rem;
+    border-radius: 100%;
+    opacity: 1.0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#modal-message {
+    font-size: 100px;
 }
 
 #action-area {
     text-align: center;
-}
-
-
-#hit {
-    margin: auto;
-    margin-bottom: .1rem;
-}
-
-#stand {
-    margin: auto;
-    margin-bottom: .1rem;
-}
-
-#surrender {
-    margin: auto;
-    margin-bottom: .1rem;
 }

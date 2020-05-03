@@ -1,3 +1,5 @@
+import Animate from './Animate.js';
+
 export default class UI {
 
     static cardFlipDelay = 200;
@@ -198,11 +200,13 @@ export default class UI {
 
     static disableBetting() {
         UI.isBettingDisabled = true;
+        document.getElementById('playerBetArea').classList.add('faded');
         document.getElementById("bet").setAttribute("disabled", "true");
     }
 
     static enableBetting() {
         UI.isBettingDisabled = false;
+        document.getElementById('playerBetArea').classList.remove('faded');
         document.getElementById("bet").removeAttribute("disabled");
     }
 
@@ -238,5 +242,23 @@ export default class UI {
             dealerFrontCardContainer.removeAttribute("src");
             UI.getDealerBackCardContainer(i).removeAttribute("src");
         }
+    }
+
+
+
+    //---------- MODAL METHODS ------------\\
+    static displayModalMessage(message) {
+        if (Animate.isModalShown) {
+            UI.displayDelayedModalMessage(message)
+        } else {
+            document.getElementById('modal-message').innerText = message;
+            Animate.modal();
+        }
+    }
+
+    static displayDelayedModalMessage(message) {
+        window.setTimeout(() => {
+            UI.displayModalMessage(message);
+        }, Animate.modalDisplayLength, message);
     }
 }
