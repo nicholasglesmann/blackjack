@@ -175,7 +175,7 @@ class Game {
     }
 
     surrenderClick() {
-        this.playerBust();
+        this.playerSurrender();
     }
 
     betClick() {
@@ -257,6 +257,13 @@ class Game {
         window.setTimeout(() => {
             this.endHand();
         }, Time.medium);
+    }
+
+    playerSurrender() {
+        let returnAmount = Number(this.playerCurrentBet) / 2;
+        this.playerCash += returnAmount;
+        UI.displayModalMessage(Text.playerSurrender + returnAmount);
+        this.endHand();
     }
 
     playerWin() {

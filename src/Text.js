@@ -7,11 +7,13 @@ export default class Text {
     static playerWinMoney = "You Won $";
     static playerLoseMoney = "You Lost $";
 
+    static playerSurrender = "You Surrendered and Got Back $";
+
     static playerBlackjack = "BLACKJACK! You won $";
     static dealerBlackjack = "DEALER BLACKJACK!";
 
 
-    static push = "Push. Take Back $";
+    static push = "Push. You Got Back $";
 
     static shuffle = "Shuffling Deck...";
 
