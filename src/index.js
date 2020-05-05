@@ -62,11 +62,14 @@ class Game {
     }
 
     mainGameLoop() {
+        this.playerBetValue = this.playerCash < 100 ? 50 : 100;
         UI.resetForNewHand(this.playerCash, this.playerBetValue);
         this.newHand();
         UI.disableActionButtons();
         this.checkGameOver();
-        UI.enableBetting();
+        window.setTimeout(() => {
+            UI.enableBetting();
+        }, Time.veryShort);
     }
 
     checkIfPlaying() {
@@ -87,7 +90,7 @@ class Game {
 
         window.setTimeout(() => {
             this.dealInitialCards();
-        }, Time.short);
+        }, Time.veryShort);
         this.checkIfPlaying();
     }
 
@@ -240,6 +243,7 @@ class Game {
     playerBust() {
         let lostAmount = this.playerCurrentBet;
         UI.displayModalMessage(Text.playerBust + lostAmount);
+        UI.disableActionButtons();
         window.setTimeout(() => {
             this.endHand();
         }, Time.medium);
@@ -249,11 +253,13 @@ class Game {
         let winAmount = Number(this.playerCurrentBet) * 2;
         this.playerCash += winAmount;
         UI.displayModalMessage(Text.dealerBust + winAmount);
+        UI.disableActionButtons();
         this.endHand();
     }
 
     playerPush() {
         UI.displayModalMessage(Text.push + this.playerCurrentBet);
+        UI.disableActionButtons();
         window.setTimeout(() => {
             this.endHand();
         }, Time.medium);
@@ -263,6 +269,7 @@ class Game {
         let returnAmount = Number(this.playerCurrentBet) / 2;
         this.playerCash += returnAmount;
         UI.displayModalMessage(Text.playerSurrender + returnAmount);
+        UI.disableActionButtons();
         this.endHand();
     }
 
@@ -270,12 +277,14 @@ class Game {
         let winAmount = Number(this.playerCurrentBet) * 2;
         this.playerCash += winAmount;
         UI.displayModalMessage(Text.playerWinMoney + winAmount);
+        UI.disableActionButtons();
         this.endHand();
     }
 
     dealerWin() {
         let lostAmount = this.playerCurrentBet;
         UI.displayModalMessage(Text.playerLoseMoney + lostAmount);
+        UI.disableActionButtons();
         this.endHand();
     }
 
@@ -283,14 +292,13 @@ class Game {
         let winAmount = Number(this.playerCurrentBet) + ((Number(this.playerCurrentBet) / 2) * 3);
         this.playerCash += winAmount;
         UI.displayModalMessage(Text.playerBlackjack + winAmount, Time.veryLong);
+        UI.disableActionButtons();
         window.setTimeout(() => {
             this.endHand();
         }, Time.long);
     }
 
     endHand() {
-        UI.disableActionButtons();
-
         // Hands should be reset before UI.removeAllCards
         this.dealerHand = new Hand();
         this.playerHand = new Hand();
