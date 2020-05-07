@@ -6,7 +6,6 @@ import Time from './Time.js';
 
 class Game {
     constructor() {
-
         ////////// Class Variables \\\\\\\\\\
         this.gameDeck = {};
 
@@ -16,6 +15,8 @@ class Game {
         this.playerCash = 1000;
         this.playerCurrentBet = 0;
         this.playerBetValue = 100;
+
+        this.handsPlayed = 0;
 
         this.isPlaying = false;
 
@@ -31,7 +32,7 @@ class Game {
         this.decreaseBet = this.decreaseBet.bind(this);
         this.dealerPlay = this.dealerPlay.bind(this);
         this.updateMoney = this.updateMoney.bind(this);
-        this.checkGameOver = this.checkGameOver.bind(this);
+        this.isGameOver = this.isGameOver.bind(this);
 
         this.startGame();
     }
@@ -63,10 +64,17 @@ class Game {
 
     mainGameLoop() {
         this.playerBetValue = this.playerCash < 100 ? 50 : 100;
-        UI.resetForNewHand(this.playerCash, this.playerBetValue);
+
+        if (this.isGameOver()) {
+            UI.gameOver();
+            return;
+        }
+
+        UI.resetForNewHand(this.playerCash, this.playerBetValue, this.handsPlayed);
+        this.handsPlayed++;
         this.newHand();
         UI.disableActionButtons();
-        this.checkGameOver();
+
         window.setTimeout(() => {
             UI.enableBetting();
         }, Time.veryShort);
@@ -91,6 +99,7 @@ class Game {
         window.setTimeout(() => {
             this.dealInitialCards();
         }, Time.veryShort);
+
         this.checkIfPlaying();
     }
 
@@ -223,7 +232,6 @@ class Game {
         }
     }
 
-
     compareScores() {
         let playerScore = this.playerHand.getScore();
         let dealerScore = this.dealerHand.getScore();
@@ -258,7 +266,9 @@ class Game {
     }
 
     playerPush() {
-        UI.displayModalMessage(Text.push + this.playerCurrentBet);
+        let returnAmount = this.playerCurrentBet;
+        this.playerCash += returnAmount;
+        UI.displayModalMessage(Text.push + returnAmount);
         UI.disableActionButtons();
         window.setTimeout(() => {
             this.endHand();
@@ -282,8 +292,7 @@ class Game {
     }
 
     dealerWin() {
-        let lostAmount = this.playerCurrentBet;
-        UI.displayModalMessage(Text.playerLoseMoney + lostAmount);
+        UI.displayModalMessage(Text.playerLoseMoney + this.playerCurrentBet);
         UI.disableActionButtons();
         this.endHand();
     }
@@ -292,6 +301,14 @@ class Game {
         let winAmount = Number(this.playerCurrentBet) + ((Number(this.playerCurrentBet) / 2) * 3);
         this.playerCash += winAmount;
         UI.displayModalMessage(Text.playerBlackjack + winAmount, Time.veryLong);
+        UI.disableActionButtons();
+        window.setTimeout(() => {
+            this.endHand();
+        }, Time.long);
+    }
+
+    dealerBlackjack() {
+        UI.displayModalMessage(Text.dealerBlackjack + this.playerCurrentBet, Time.veryLong);
         UI.disableActionButtons();
         window.setTimeout(() => {
             this.endHand();
@@ -310,19 +327,22 @@ class Game {
         this.mainGameLoop();
     }
 
-    checkGameOver() {
+    isGameOver() {
         if (this.playerCash <= 0) {
-            window.setTimeout(() => {
-                let bodySelector = document.getElementsByTagName("body");
-                let body = bodySelector[0];
-                let allElements = document.getElementsByTagName("*");
-                for (let i = 0; i < allElements.length; i++) {
-                    allElements[i].classList.add("hidden");
-                }
-                body.classList.remove("hidden");
-                body.classList.add("gameOver");
-            }, 2000);
+            UI.displayModalMessage(Text.gameOver, Time.eternal);
+            // window.setTimeout(() => {
+            //     let bodySelector = document.getElementsByTagName("body");
+            //     let body = bodySelector[0];
+            //     let allElements = document.getElementsByTagName("*");
+            //     for (let i = 0; i < allElements.length; i++) {
+            //         allElements[i].classList.add("hidden");
+            //     }
+            //     body.classList.remove("hidden");
+            //     body.classList.add("gameOver");
+            // }, 2000);
+            return true;
         }
+        return false;
     }
 
     ////////// Update Screen Methods \\\\\\\\\\
@@ -340,11 +360,15 @@ class Game {
         UI.flipCard(startingCardContainer);
     }
 
-
     dealerPlay() {
         let printDelay = Time.veryShort;
 
         this.dealerFlipInitialCard();
+
+        if (this.dealerHand.getScore() === 21) {
+            this.dealerBlackjack();
+            return;
+        }
 
         while (this.dealerHand.getScore() <= 17) {
             //get the new card position
@@ -373,7 +397,6 @@ class Game {
         setTimeout(() => { this.compareScores(); }, printDelay);
     }
 }
-
 
 let game;
 window.addEventListener('load', () => {

@@ -99,16 +99,10 @@ h6 {
     display: inline-block;
 }
 
-/* #playerBetArea {
-    margin: auto;
-    margin-top: -2rem;
-    text-align: center;
-} */
-
 .circle {
     position: relative;
     display: inline-block;
-    width: 120px;
+    width: 100%;
     padding: 0;
     border-radius: 50%;
     font-size: 48px;
@@ -209,7 +203,7 @@ h6 {
 }
 
 #modal-message {
-    font-size: 100px;
+    font-size: 72px;
 }
 
 #action-area {

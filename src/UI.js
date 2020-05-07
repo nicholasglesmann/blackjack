@@ -39,9 +39,48 @@ export default class UI {
         }
     }
 
-    static resetForNewHand(playerCash, playerBet) {
+    static gameOver() {
+        UI.removeAllCards();
+        let placeCardDelay = Time.veryShort;
+        let removeCardDelay = Time.veryLong;
+        for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 6; i++) {
+                window.setTimeout(() => {
+                    UI.placeCard(document.getElementById("player" + i + "-back"));
+                }, placeCardDelay, i);
+
+                placeCardDelay += Time.instant;
+
+                window.setTimeout(() => {
+                    UI.placeCard(document.getElementById("dealer" + i + "-back"));
+                }, placeCardDelay, i);
+
+                placeCardDelay += Time.instant;
+            }
+
+            for (let i = 0; i < 6; i++) {
+                window.setTimeout(() => {
+                    UI.moveDealerCardToDeck(i);
+                }, removeCardDelay, i);
+
+                removeCardDelay += Time.instant;
+
+                window.setTimeout(() => {
+                    UI.movePlayerCardToDeck(i);
+                }, removeCardDelay, i);
+
+                removeCardDelay += Time.instant;
+            }
+
+            placeCardDelay += Time.long;
+            removeCardDelay += Time.long;
+        }
+    }
+
+    static resetForNewHand(playerCash, playerBet, handsPlayed) {
         document.getElementById("playerScore").innerText = 0;
         document.getElementById("dealerScore").innerText = 0;
+        document.getElementById("hands-played").innerText = "Hands Played: " + handsPlayed;
         document.getElementById("playerCash").innerHTML = "Total Cash: $" + playerCash;
 
         let animationDelay = Time.veryShort;

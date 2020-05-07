@@ -68,16 +68,28 @@ export default class Deck {
         // }
 
 
-        // Test Player blackjack
-        for (let i = 0; i < 1; i++) {
-            let card = new Card(0, 1);
-            this.deck.push(card);
-        }
-        for (let i = 0; i < 2; i++) {
-            let card = new Card(0, 10);
-            this.deck.push(card);
-        }
+        // // Test Player blackjack
+        // for (let i = 0; i < 1; i++) {
+        //     let card = new Card(0, 1);
+        //     this.deck.push(card);
+        // }
+        // for (let i = 0; i < 2; i++) {
+        //     let card = new Card(0, 10);
+        //     this.deck.push(card);
+        // }
 
 
+        // // Test Dealer blackjack
+        // let card = new Card(0, 10);
+        // this.deck.push(card);
+
+        // card = new Card(0, 10);
+        // this.deck.push(card);
+
+        // card = new Card(0, 1);
+        // this.deck.push(card);
+
+        // card = new Card(0, 10);
+        // this.deck.push(card);
     }
 }

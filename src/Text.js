@@ -10,7 +10,7 @@ export default class Text {
     static playerSurrender = "You Surrendered and Got Back $";
 
     static playerBlackjack = "BLACKJACK! You won $";
-    static dealerBlackjack = "DEALER BLACKJACK!";
+    static dealerBlackjack = "DEALER BLACKJACK! You lost $";
 
 
     static push = "Push. You Got Back $";
