@@ -8,13 +8,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="manifest" href="src/manifest.json">
     <link rel="stylesheet" href="src/styles.css">
+    <link rel="stylesheet" href="src/mobile-styles.css">
     <title>Blackjack</title>
 </head>
 
 <body class="bg-light text-dark">
     <div class="container-fluid text-dark">
-        <div id="heading-area" class="row mb-0 mb-xl-5">
+        <div id="heading-area" class="row mb-0 mb-xl-3 d-none d-lg-block">
             <div class="col-12">
                 <div id="heading" class="mb-1">
                     <h1>BLACKJACK</h1>
@@ -23,12 +25,12 @@
         </div>
         <div id="gameplay-area" class="row my-auto">
             <div class="col-12">
-                <div class="row justify-content-center mb-5 mt-0">
-                    <div class="col-lg-0 col-xl-2"></div>
-                    <div class="col-lg-3 col-xl-2">
-                        <img id="deck" class="mt-3" src="./images/cards/blue_back.png"></img>
+                <div class="row justify-content-center mb-0 mb-lg-5 mt-0">
+                    <div class="col-0 col-xl-2"></div>
+                    <div class="col-3 col-xl-2">
+                        <img id="deck" class="my-2 my-xl-3" src="./images/cards/blue_back.png"></img>
                     </div>
-                    <div class="col-lg-6 col-xl-5">
+                    <div class="col-6 col-xl-5">
                         <div id="dealer-area" class="">
                             <div id="dealer0" class="card-scene">
                                 <div class="card my-0 py-0">
@@ -68,7 +70,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-xl-1 my-auto text-center">
+                    <div class="col-2 col-xl-1 mt-4 my-lg-auto text-center">
                         <div id="dealerScore" class="circle bg-dark text-light">
                             0
                         </div>
@@ -76,32 +78,33 @@
                             <h5>Dealer Score</h5>
                         </div>
                     </div>
-                    <div class="col-lg-1 col-xl-2"></div>
+                    <div class="col-1 col-xl-2"></div>
                 </div>
-                <div class="row justify-content-center mt-5">
-                    <div class="col-lg-0 col-xl-2"></div>
-                    <div id="action-area" class="col-lg-3 col-xl-2">
-                        <div class="btn-group-lg btn-group-vertical mt-4">
+                <div class="row justify-content-center mt-0 mt-lg-5">
+                    <div class="col-0 col-xl-2"></div>
+                    <div id="action-area" class="col-3 col-xl-2">
+                        <div class="btn-group-lg btn-group-vertical mt-0 mt-xl-4">
                             <button id="hit" class="btn btn-secondary">Hit</button>
                             <button id="stand" class="btn btn-dark">Stand</button>
-                            <button id="surrender" class="btn btn-danger">Surrender</button>
+                            <button id="surrender" class="btn  btn-danger">Surrender</button>
                         </div>
-                        <div id="playerBetArea" class="mt-3">
+                        <div id="playerBetArea" class="mt-lg-3">
                             <div class="row justify-content-center">
-                                <div class="col-2">
+                                <div class="col-0 col-lg-2">
                                 </div>
-                                <div class="col-8 d-flex justify-content-center">
+                                <div class="col-12 col-lg-8 d-flex justify-content-center">
                                     <i id="downArrow" class="fas fa-caret-left fa-3x mr-2"></i>
                                     <h3 id="playerBetSelection" class="my-auto d-inline-block">$9999</h3>
                                     <i id="upArrow" class="fas fa-caret-right fa-3x ml-2"></i>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-0 col-lg-2">
                                 </div>
                             </div>
                         </div>
-                        <button id="bet" class="btn btn-lg btn-primary">Place Bet</button>
+                        <button id="bet" class="btn btn-lg btn-primary my-0 my-lg-3">Place
+                            Bet</button>
                     </div>
-                    <div class="col-lg-6 col-xl-5">
+                    <div class="col-6 col-xl-5">
                         <div id="player-area" class="">
                             <div id="player0" class="card-scene">
                                 <div class="card my-0 py-0">
@@ -141,7 +144,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-xl-1 my-auto text-center">
+                    <div class="col-2 col-xl-1 mt-4 my-lg-auto text-center">
                         <div id="playerScore" class="circle bg-dark text-light">
                             0
                         </div>
@@ -149,23 +152,23 @@
                             <h5>Player Score</h5>
                         </div>
                     </div>
-                    <div class="col-lg-1 col-xl-2"></div>
+                    <div class="col-1 col-xl-2"></div>
                 </div>
             </div>
         </div>
     </div>
-    <div id="scoring-area" class="row justify-content-center mb-3">
-        <div class="col-lg-3 col-xl-4"></div>
-        <div class="col-lg-3 col-xl-2 pl-4">
+    <div id="scoring-area" class="bg-secondary text-light row justify-content-center mr-4 mr-lg-0 mb-lg-3 pt-2 py-xl-3">
+        <div class="col-0 col-xl-4"></div>
+        <div class="col-4 col-xl-2 text-center text-xl-left pl-0 pl-lg-4">
             <h4 id="hands-played" class="playerInfo info-area my-auto">Hands Played: 0</h4>
         </div>
-        <div class="col-lg-3 col-xl-2">
+        <div class="col-4 col-xl-2 text-center text-xl-left">
             <h4 id="playerBet" class="playerInfo info-area my-auto">Current Bet: $0</h4>
         </div>
-        <div class="col-lg-3 col-xl-2">
+        <div class="col-4 col-xl-2 text-center text-xl-left">
             <h4 id="playerCash" class="playerInfo info-area my-auto">Total Cash: $0</h4>
         </div>
-        <div class="col-lg-0 col-xl-2"></div>
+        <div class="col-0 col-xl-2"></div>
     </div>
     </div>
 

@@ -1,0 +1,58 @@
+@media screen and (max-height: 500px) {
+    h1 {
+        font-size: 3rem;
+    }
+
+    .card-scene {
+        width: 6rem;
+        z-index: 1;
+    }
+
+    .card-face {
+        width: 6rem;
+        z-index: 1;
+    }
+
+    .btn-responsive {
+        padding:2px 4px;
+        font-size:80%;
+        line-height: 1;
+    }
+
+    #deck {
+        width: 6rem;
+    }
+
+    #scoring-area {
+        position: fixed;
+        right:0;
+        bottom: 0;
+    }
+
+    .playerInfo {
+        font-size: 1.2rem;
+    }
+
+    #info-modal-background {
+        opacity: 1;
+    }
+
+   #modal-message {
+        font-size: 50px;
+    }
+
+    #info-modal-text {
+        transform: translate(-50%,-54%) !important;
+    }
+
+    .btn-group-lg>.btn, .btn-lg {
+        font-size: 1rem;
+        line-height: 1.25rem;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    #info-modal-text {
+        transform: translate(-50%,-51%);
+    }
+}
