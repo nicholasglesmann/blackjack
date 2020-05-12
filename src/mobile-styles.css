@@ -1,4 +1,9 @@
 @media screen and (max-height: 500px) {
+    body {
+        transform: scale(.9);
+        height: 100vw;
+    }
+
     h1 {
         font-size: 3rem;
     }
@@ -33,7 +38,8 @@
         font-size: 1.2rem;
     }
 
-    #info-modal-background {
+    #info-modal-background {    height: 175vh;
+    width: 175vw;
         opacity: 1;
     }
 
