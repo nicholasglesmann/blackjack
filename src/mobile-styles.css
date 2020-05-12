@@ -4,12 +4,12 @@
     }
 
     .card-scene {
-        width: 6rem;
+        width: 5rem;
         z-index: 1;
     }
 
     .card-face {
-        width: 6rem;
+        width: 5rem;
         z-index: 1;
     }
 
@@ -20,7 +20,7 @@
     }
 
     #deck {
-        width: 6rem;
+        width: 5rem;
     }
 
     #scoring-area {
@@ -54,5 +54,33 @@
 @media screen and (max-width: 1024px) {
     #info-modal-text {
         transform: translate(-50%,-51%);
+    }
+}
+
+@media only screen and (orientation: portrait) {
+    body {
+        -webkit-transform: rotate(90deg);
+
+        -moz-transform: rotate(90deg);
+
+        -o-transform: rotate(90deg);
+
+        -ms-transform: rotate(90deg);
+
+        transform: rotate(90deg);
+    }
+}
+
+@media only screen and (orientation: landscape) {
+    body {
+        -webkit-transform: rotate(0deg);
+
+        -moz-transform: rotate(0deg);
+
+        -o-transform: rotate(0deg);
+
+        -ms-transform: rotate(0deg);
+
+        transform: rotate(0deg);
     }
 }
